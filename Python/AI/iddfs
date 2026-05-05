@@ -1,0 +1,73 @@
+# ----------- ITERATIVE DEEPENING DFS (IDDFS) -----------
+
+def dls(graph, node, depth, visited):
+    if depth < 0:
+        return
+
+    print(node, end=" ")
+    visited.add(node)
+
+    if depth == 0:
+        return
+
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            dls(graph, neighbor, depth - 1, visited)
+
+
+def iddfs(graph, start, max_depth):
+    for depth in range(max_depth + 1):
+        print(f"\nDepth {depth}: ", end="")
+        visited = set()
+        dls(graph, start, depth, visited)
+
+
+# ----------- HARDCODED GRAPH -----------
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': ['F'],
+    'F': []
+}
+
+iddfs(graph, 'A', 3)
+
+
+# ----------- INPUT-BASED VERSION -----------
+
+def iddfs_input():
+    graph = {}
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        neighbors = input("Enter neighbors (space separated): ").split()
+        graph[node] = neighbors
+
+    start = input("Enter starting node: ")
+    max_depth = int(input("Enter max depth: "))
+
+    def dls(node, depth, visited):
+        if depth < 0:
+            return
+
+        print(node, end=" ")
+        visited.add(node)
+
+        if depth == 0:
+            return
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                dls(neighbor, depth - 1, visited)
+
+    for depth in range(max_depth + 1):
+        print(f"\nDepth {depth}: ", end="")
+        visited = set()
+        dls(start, depth, visited)
+
+
+iddfs_input()

@@ -1,0 +1,51 @@
+# ----------- HARDCODED DFS -----------
+
+def dfs_hardcoded():
+    graph = {
+        'A': ['B', 'C'],
+        'B': ['D', 'E'],
+        'C': ['F'],
+        'D': [],
+        'E': ['F'],
+        'F': []
+    }
+
+    visited = set()
+
+    def dfs(node):
+        if node not in visited:
+            print(node, end=" ")
+            visited.add(node)
+            for neighbor in graph[node]:
+                dfs(neighbor)
+
+    dfs('A')
+
+dfs_hardcoded()
+
+
+# ----------- INPUT-BASED DFS -----------
+
+def dfs_input():
+    graph = {}
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        neighbors = input("Enter neighbors (space separated): ").split()
+        graph[node] = neighbors
+
+    start = input("Enter starting node: ")
+
+    visited = set()
+
+    def dfs(node):
+        if node not in visited:
+            print(node, end=" ")
+            visited.add(node)
+            for neighbor in graph[node]:
+                dfs(neighbor)
+
+    dfs(start)
+
+dfs_input()

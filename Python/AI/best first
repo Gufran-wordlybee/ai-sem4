@@ -1,0 +1,93 @@
+# ----------- GREEDY BEST FIRST SEARCH (HARDCODED) -----------
+
+import heapq
+
+def best_first_hardcoded():
+    graph = {
+        'A': ['B', 'C'],
+        'B': ['D', 'E'],
+        'C': ['F'],
+        'D': [],
+        'E': ['F'],
+        'F': []
+    }
+
+    heuristic = {
+        'A': 5,
+        'B': 3,
+        'C': 4,
+        'D': 2,
+        'E': 6,
+        'F': 0
+    }
+
+    start = 'A'
+    goal = 'F'
+
+    pq = [(heuristic[start], start)]
+    visited = set()
+
+    while pq:
+        h, node = heapq.heappop(pq)
+
+        if node in visited:
+            continue
+
+        print(node, end=" ")
+        visited.add(node)
+
+        if node == goal:
+            print("\nReached goal")
+            return
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                heapq.heappush(pq, (heuristic[neighbor], neighbor))
+
+best_first_hardcoded()
+
+
+# ----------- INPUT-BASED BEST FIRST SEARCH -----------
+
+import heapq
+
+def best_first_input():
+    graph = {}
+    heuristic = {}
+
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        neighbors = input("Enter neighbors (space separated): ").split()
+        graph[node] = neighbors
+
+    print("Enter heuristic values:")
+    for node in graph:
+        h = int(input(f"h({node}) = "))
+        heuristic[node] = h
+
+    start = input("Enter start node: ")
+    goal = input("Enter goal node: ")
+
+    pq = [(heuristic[start], start)]
+    visited = set()
+
+    while pq:
+        h, node = heapq.heappop(pq)
+
+        if node in visited:
+            continue
+
+        print(node, end=" ")
+        visited.add(node)
+
+        if node == goal:
+            print("\nReached goal")
+            return
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                heapq.heappush(pq, (heuristic[neighbor], neighbor))
+
+best_first_input()

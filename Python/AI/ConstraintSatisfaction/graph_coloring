@@ -1,0 +1,93 @@
+# ----------- GRAPH COLORING USING CSP (BACKTRACKING) -----------
+
+def is_valid(node, color, graph, assignment):
+    for neighbor in graph[node]:
+        if neighbor in assignment and assignment[neighbor] == color:
+            return False
+    return True
+
+def backtrack(graph, colors, assignment):
+    if len(assignment) == len(graph):
+        return assignment
+
+    # select unassigned node
+    for node in graph:
+        if node not in assignment:
+            break
+
+    for color in colors:
+        if is_valid(node, color, graph, assignment):
+            assignment[node] = color
+            result = backtrack(graph, colors, assignment)
+            if result:
+                return result
+            del assignment[node]
+
+    return None
+
+
+# ----------- HARDCODED GRAPH -----------
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'C', 'D'],
+    'C': ['A', 'B', 'D'],
+    'D': ['B', 'C']
+}
+
+colors = ['Red', 'Green', 'Blue']
+
+solution = backtrack(graph, colors, {})
+
+print("Solution:")
+for node in solution:
+    print(node, "->", solution[node])
+
+
+# ----------- INPUT-BASED VERSION -----------
+
+def graph_coloring_input():
+    graph = {}
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        neighbors = input("Enter neighbors (space separated): ").split()
+        graph[node] = neighbors
+
+    colors = input("Enter colors (space separated): ").split()
+
+    def is_valid(node, color, assignment):
+        for neighbor in graph[node]:
+            if neighbor in assignment and assignment[neighbor] == color:
+                return False
+        return True
+
+    def backtrack(assignment):
+        if len(assignment) == len(graph):
+            return assignment
+
+        for node in graph:
+            if node not in assignment:
+                break
+
+        for color in colors:
+            if is_valid(node, color, assignment):
+                assignment[node] = color
+                result = backtrack(assignment)
+                if result:
+                    return result
+                del assignment[node]
+
+        return None
+
+    solution = backtrack({})
+
+    print("Solution:")
+    if solution:
+        for node in solution:
+            print(node, "->", solution[node])
+    else:
+        print("No solution found")
+
+graph_coloring_input()

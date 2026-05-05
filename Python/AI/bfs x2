@@ -1,0 +1,56 @@
+# ----------- HARDCODED BFS -----------
+
+from collections import deque
+
+def bfs_hardcoded():
+    graph = {
+        'A': ['B', 'C'],
+        'B': ['D', 'E'],
+        'C': ['F'],
+        'D': [],
+        'E': ['F'],
+        'F': []
+    }
+
+    start = 'A'
+    visited = set([start])
+    queue = deque([start])
+
+    while queue:
+        node = queue.popleft()
+        print(node, end=" ")
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+bfs_hardcoded()
+
+
+# ----------- INPUT-BASED BFS -----------
+
+from collections import deque
+
+def bfs_input():
+    graph = {}
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        neighbors = input("Enter neighbors (space separated): ").split()
+        graph[node] = neighbors
+
+    start = input("Enter starting node: ")
+
+    visited = set([start])
+    queue = deque([start])
+
+    while queue:
+        node = queue.popleft()
+        print(node, end=" ")
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+bfs_input()

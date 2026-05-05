@@ -1,0 +1,63 @@
+# ----------- HILL CLIMBING FOR 8-QUEENS (RANDOM BOARD) -----------
+
+import random
+
+N = 8
+
+def random_board():
+    return [random.randint(0, N-1) for _ in range(N)]
+
+def heuristic(board):
+    h = 0
+    for i in range(N):
+        for j in range(i+1, N):
+            if board[i] == board[j] or abs(board[i] - board[j]) == abs(i - j):
+                h += 1
+    return h
+
+def get_neighbors(board):
+    neighbors = []
+    for col in range(N):
+        for row in range(N):
+            if row != board[col]:
+                new_board = board[:]
+                new_board[col] = row
+                neighbors.append(new_board)
+    return neighbors
+
+def hill_climbing():
+    current = random_board()
+    current_h = heuristic(current)
+
+    while True:
+        neighbors = get_neighbors(current)
+        next_board = current
+        next_h = current_h
+
+        for board in neighbors:
+            h = heuristic(board)
+            if h < next_h:
+                next_board = board
+                next_h = h
+
+        if next_h >= current_h:
+            return current, current_h
+
+        current = next_board
+        current_h = next_h
+
+def print_board(board):
+    for i in range(N):
+        for j in range(N):
+            if board[j] == i:
+                print("Q", end=" ")
+            else:
+                print(".", end=" ")
+        print()
+    print()
+
+# Run
+solution, h = hill_climbing()
+
+print("Final Board (h =", h, "):")
+print_board(solution)

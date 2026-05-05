@@ -1,0 +1,100 @@
+# ----------- A* SEARCH (HARDCODED) -----------
+
+import heapq
+
+def a_star_hardcoded():
+    graph = {
+        'A': [('B', 1), ('C', 4)],
+        'B': [('D', 2), ('E', 5)],
+        'C': [('F', 1)],
+        'D': [],
+        'E': [('F', 1)],
+        'F': []
+    }
+
+    heuristic = {
+        'A': 5,
+        'B': 3,
+        'C': 4,
+        'D': 2,
+        'E': 6,
+        'F': 0
+    }
+
+    start = 'A'
+    goal = 'F'
+
+    pq = [(heuristic[start], 0, start)]  # (f = g+h, g, node)
+    visited = set()
+
+    while pq:
+        f, g, node = heapq.heappop(pq)
+
+        if node in visited:
+            continue
+
+        print(node, end=" ")
+        visited.add(node)
+
+        if node == goal:
+            print("\nCost:", g)
+            return
+
+        for neighbor, cost in graph[node]:
+            if neighbor not in visited:
+                new_g = g + cost
+                new_f = new_g + heuristic[neighbor]
+                heapq.heappush(pq, (new_f, new_g, neighbor))
+
+a_star_hardcoded()
+
+
+# ----------- INPUT-BASED A* SEARCH -----------
+
+import heapq
+
+def a_star_input():
+    graph = {}
+    heuristic = {}
+
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        edges = input("Enter neighbors with cost (format: node cost ...): ").split()
+        neighbors = []
+        for i in range(0, len(edges), 2):
+            neighbors.append((edges[i], int(edges[i+1])))
+        graph[node] = neighbors
+
+    print("Enter heuristic values:")
+    for node in graph:
+        h = int(input(f"h({node}) = "))
+        heuristic[node] = h
+
+    start = input("Enter start node: ")
+    goal = input("Enter goal node: ")
+
+    pq = [(heuristic[start], 0, start)]
+    visited = set()
+
+    while pq:
+        f, g, node = heapq.heappop(pq)
+
+        if node in visited:
+            continue
+
+        print(node, end=" ")
+        visited.add(node)
+
+        if node == goal:
+            print("\nCost:", g)
+            return
+
+        for neighbor, cost in graph[node]:
+            if neighbor not in visited:
+                new_g = g + cost
+                new_f = new_g + heuristic[neighbor]
+                heapq.heappush(pq, (new_f, new_g, neighbor))
+
+a_star_input()

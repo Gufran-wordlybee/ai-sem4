@@ -1,0 +1,88 @@
+# ----------- LOCAL & STOCHASTIC BEAM SEARCH (PATH FROM S TO G) -----------
+
+import random
+
+# Example graph (adjacency list with costs)
+graph = {
+    'S': [('A', 1), ('B', 4)],
+    'A': [('C', 2), ('D', 5)],
+    'B': [('D', 1)],
+    'C': [('G', 5)],
+    'D': [('G', 2)],
+    'G': []
+}
+
+# Heuristic values
+heuristic = {
+    'S': 7,
+    'A': 6,
+    'B': 2,
+    'C': 1,
+    'D': 1,
+    'G': 0
+}
+
+# ----------- LOCAL BEAM SEARCH -----------
+
+def local_beam_search(start, goal, k=2):
+    paths = [[start]]
+
+    while paths:
+        new_paths = []
+
+        for path in paths:
+            node = path[-1]
+
+            if node == goal:
+                return path
+
+            for neighbor, _ in graph[node]:
+                if neighbor not in path:
+                    new_paths.append(path + [neighbor])
+
+        # sort by heuristic of last node
+        new_paths.sort(key=lambda p: heuristic[p[-1]])
+
+        # keep best k paths
+        paths = new_paths[:k]
+
+    return None
+
+
+# ----------- STOCHASTIC BEAM SEARCH -----------
+
+def stochastic_beam_search(start, goal, k=2):
+    paths = [[start]]
+
+    while paths:
+        all_paths = []
+
+        for path in paths:
+            node = path[-1]
+
+            if node == goal:
+                return path
+
+            for neighbor, _ in graph[node]:
+                if neighbor not in path:
+                    all_paths.append(path + [neighbor])
+
+        # convert heuristic to fitness (lower h -> higher fitness)
+        fitness = [1 / (1 + heuristic[p[-1]]) for p in all_paths]
+
+        # probabilistic selection
+        paths = random.choices(all_paths, weights=fitness, k=k)
+
+    return None
+
+
+# ----------- RUN -----------
+
+start = 'S'
+goal = 'G'
+
+print("Local Beam Search Path:")
+print(local_beam_search(start, goal))
+
+print("Stochastic Beam Search Path:")
+print(stochastic_beam_search(start, goal))

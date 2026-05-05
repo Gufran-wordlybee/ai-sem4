@@ -1,0 +1,43 @@
+# ----------- 8-QUEENS USING CSP (BACKTRACKING) -----------
+
+N = 8
+
+def is_valid(board, row, col):
+    for i in range(col):
+        if board[i] == row or abs(board[i] - row) == abs(i - col):
+            return False
+    return True
+
+def solve(board, col=0):
+    if col == N:
+        return True
+
+    for row in range(N):
+        if is_valid(board, row, col):
+            board[col] = row
+            if solve(board, col + 1):
+                return True
+            board[col] = -1
+
+    return False
+
+def print_board(board):
+    for i in range(N):
+        for j in range(N):
+            if board[j] == i:
+                print("Q", end=" ")
+            else:
+                print(".", end=" ")
+        print()
+    print()
+
+
+# ----------- RUN -----------
+
+board = [-1] * N
+
+if solve(board):
+    print("Solution:")
+    print_board(board)
+else:
+    print("No solution")

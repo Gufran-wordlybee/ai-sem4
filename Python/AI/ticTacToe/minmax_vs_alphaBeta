@@ -1,0 +1,63 @@
+# ----------- TIC TAC TOE (MINIMAX) -----------
+
+EMPTY = " "
+AI = "X"
+HUMAN = "O"
+
+def create_board():
+    return [[EMPTY]*3 for _ in range(3)]
+
+def print_board(b):
+    for r in b:
+        print("|".join(r))
+        print("-"*5)
+
+def winner(b):
+    for i in range(3):
+        if b[i][0]==b[i][1]==b[i][2]!=EMPTY: return b[i][0]
+        if b[0][i]==b[1][i]==b[2][i]!=EMPTY: return b[0][i]
+    if b[0][0]==b[1][1]==b[2][2]!=EMPTY: return b[0][0]
+    if b[0][2]==b[1][1]==b[2][0]!=EMPTY: return b[0][2]
+    return None
+
+def full(b):
+    return all(cell!=EMPTY for row in b for cell in row)
+
+def minimax(b, is_max):
+    w = winner(b)
+    if w == AI: return 1
+    if w == HUMAN: return -1
+    if full(b): return 0
+
+    if is_max:
+        best = -999
+        for i in range(3):
+            for j in range(3):
+                if b[i][j]==EMPTY:
+                    b[i][j]=AI
+                    best = max(best, minimax(b, False))
+                    b[i][j]=EMPTY
+        return best
+    else:
+        best = 999
+        for i in range(3):
+            for j in range(3):
+                if b[i][j]==EMPTY:
+                    b[i][j]=HUMAN
+                    best = min(best, minimax(b, True))
+                    b[i][j]=EMPTY
+        return best
+
+def best_move(b):
+    best = -999
+    move = (-1,-1)
+    for i in range(3):
+        for j in range(3):
+            if b[i][j]==EMPTY:
+                b[i][j]=AI
+                val = minimax(b, False)
+                b[i][j]=EMPTY
+                if val > best:
+                    best = val
+                    move = (i,j)
+    return move

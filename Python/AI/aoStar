@@ -1,0 +1,116 @@
+# ----------- AO* SEARCH (HARDCODED) -----------
+
+def ao_star_hardcoded():
+    graph = {
+        'A': [[('B', 1), ('C', 1)], [('D', 1)]],
+        'B': [[('E', 1)], [('F', 1)]],
+        'C': [],
+        'D': [],
+        'E': [],
+        'F': []
+    }
+
+    heuristic = {
+        'A': 10,
+        'B': 6,
+        'C': 2,
+        'D': 1,
+        'E': 0,
+        'F': 0
+    }
+
+    solution = {}
+
+    def ao_star(node):
+        if not graph[node]:
+            return heuristic[node]
+
+        min_cost = float('inf')
+        best = None
+
+        for option in graph[node]:
+            cost = 0
+            for child, weight in option:
+                cost += ao_star(child) + weight
+            if cost < min_cost:
+                min_cost = cost
+                best = option
+
+        heuristic[node] = min_cost
+        solution[node] = best
+        return min_cost
+
+    ao_star('A')
+
+    def print_solution(node):
+        if node not in solution:
+            print(node, end=" ")
+            return
+        print(node, end=" -> ")
+        for child, _ in solution[node]:
+            print_solution(child)
+
+    print_solution('A')
+
+ao_star_hardcoded()
+
+
+# ----------- INPUT-BASED AO* SEARCH -----------
+
+def ao_star_input():
+    graph = {}
+    heuristic = {}
+
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        m = int(input(f"Enter number of AND/OR options for {node}: "))
+        options = []
+        for _ in range(m):
+            data = input("Enter children with cost (format: node cost ...): ").split()
+            group = []
+            for i in range(0, len(data), 2):
+                group.append((data[i], int(data[i+1])))
+            options.append(group)
+        graph[node] = options
+
+    print("Enter heuristic values:")
+    for node in graph:
+        heuristic[node] = int(input(f"h({node}) = "))
+
+    solution = {}
+
+    def ao_star(node):
+        if not graph[node]:
+            return heuristic[node]
+
+        min_cost = float('inf')
+        best = None
+
+        for option in graph[node]:
+            cost = 0
+            for child, weight in option:
+                cost += ao_star(child) + weight
+            if cost < min_cost:
+                min_cost = cost
+                best = option
+
+        heuristic[node] = min_cost
+        solution[node] = best
+        return min_cost
+
+    start = input("Enter start node: ")
+    ao_star(start)
+
+    def print_solution(node):
+        if node not in solution:
+            print(node, end=" ")
+            return
+        print(node, end=" -> ")
+        for child, _ in solution[node]:
+            print_solution(child)
+
+    print_solution(start)
+
+ao_star_input()

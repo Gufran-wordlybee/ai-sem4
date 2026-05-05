@@ -1,0 +1,80 @@
+# ----------- UNIFORM COST SEARCH (HARDCODED) -----------
+
+import heapq
+
+def ucs_hardcoded():
+    graph = {
+        'A': [('B', 1), ('C', 4)],
+        'B': [('D', 2), ('E', 5)],
+        'C': [('F', 1)],
+        'D': [],
+        'E': [('F', 1)],
+        'F': []
+    }
+
+    start = 'A'
+    goal = 'F'
+
+    pq = [(0, start)]  # (cost, node)
+    visited = set()
+
+    while pq:
+        cost, node = heapq.heappop(pq)
+
+        if node in visited:
+            continue
+
+        print(node, end=" ")
+        visited.add(node)
+
+        if node == goal:
+            print("\nCost:", cost)
+            return
+
+        for neighbor, weight in graph[node]:
+            if neighbor not in visited:
+                heapq.heappush(pq, (cost + weight, neighbor))
+
+ucs_hardcoded()
+
+
+# ----------- INPUT-BASED UCS -----------
+
+import heapq
+
+def ucs_input():
+    graph = {}
+    n = int(input("Enter number of nodes: "))
+
+    for _ in range(n):
+        node = input("Enter node: ")
+        edges = input("Enter neighbors with cost (format: node cost ...): ").split()
+        neighbors = []
+        for i in range(0, len(edges), 2):
+            neighbors.append((edges[i], int(edges[i+1])))
+        graph[node] = neighbors
+
+    start = input("Enter start node: ")
+    goal = input("Enter goal node: ")
+
+    pq = [(0, start)]
+    visited = set()
+
+    while pq:
+        cost, node = heapq.heappop(pq)
+
+        if node in visited:
+            continue
+
+        print(node, end=" ")
+        visited.add(node)
+
+        if node == goal:
+            print("\nCost:", cost)
+            return
+
+        for neighbor, weight in graph[node]:
+            if neighbor not in visited:
+                heapq.heappush(pq, (cost + weight, neighbor))
+
+ucs_input()
